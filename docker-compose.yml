@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  firefox:
+    container_name: firefox
+    image: ghcr.io/linuxserver/firefox:latest
+    hostname: firefox
+    environment:
+      TZ: Asia/Kuching
+      PUID: 1026
+      PGID: 100
+      TITLE: Firefox
+      CUSTOM_USER: user
+      PASSWORD: password
+    volumes:
+      - /data/firefox:/config:rw
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    mem_limit: 3g
+    shm_size: 5g
+    cpu_shares: 1024
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:unconfined
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://user:password@localhost:3000
